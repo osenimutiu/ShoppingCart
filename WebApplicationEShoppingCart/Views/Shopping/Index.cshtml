@@ -1,0 +1,77 @@
+﻿@model IEnumerable<WebApplicationEShoppingCart.ViewModel.ShoppingViewModel>
+@{
+    ViewBag.Title = "Index";
+}
+<style>
+    .imageborder{
+        border: 2px solid maroon;
+        float: right;
+       
+    }
+</style>
+
+
+
+<div class="row" >
+    <h2 class="text-center">Product List</h2>
+    @foreach(var item in Model)
+    {
+    <div class="col-md-4 imageborder">
+        <h3 class="">@item.ItemName</h3>
+        <img class="img-responsive " src="@Url.Content(item.ImagePath)" style="height: 150px; width: 150px; float: right" />
+        <b style="text-align: left">@item.Description</b>
+        <h2 style="text-align: left">@item.ItemPrice.ToString("#,##0,00 INR")</h2>
+        <div class="col-md-4" style="text-align: right; margin-bottom: 10px; padding: 2px">
+            <input type="button" name="AddToCart" value="Add to Cart" class="btn btn-primary" itemid="@item.ItemId" id="btnAddToCart" onclick="AddToCart(this)" />
+        </div>
+    </div> 
+        @*<div class="col-md-4" style="border: 2px solid black">
+            <div style="text-align: center; border-bottom: 2px solid maroon">
+                <h3>@item.ItemName</h3>
+            </div>
+            <div class="col-md-8">
+                <img src="@Url.Content(item.ImagePath)" style="height: 150px; width: 150px;"/>
+            </div>
+            <div class="col-md-4" style="text-align: left">
+                <b>@item.Description</b>
+            </div>
+        </div>
+        <div class="col-md-8" style="font-size: 18px; border-top: 2px solid maroon; padding: 2px">
+            <b>@item.ItemCode</b>
+        </div>
+        <div class="col-md-4" style="text-align: right; margin-bottom: 10px; border-bottom: 2px solid maroon; padding: 2px">
+            <input type="button" name="AddToCart" value="Add to Cart" class="btn btn-primary" itemid="@item.ItemId" id="btnAddToCart" onclick="AddToCart()"/>
+        </div>*@
+    }
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        function AddToCart(item) {
+            var itemId = $(item).attr("itemId");
+            var formData = new FormData();
+            formData.append("ItemId", itemId);
+
+            $.ajax({
+                async: true,
+                 type: 'POST',
+                contentType: false,
+                processData: false,
+                data: formData,
+                url: '/Shopping/Index',
+               
+                success: function (data) {
+                    if (data.Success) {
+                        $("#cartItem").text("Cart(" + data.Counter + ")");
+                        
+                    }
+
+                },
+
+                error: function () {
+                    alert('There is some errors to add item.');
+                }
+            });
+        }
+    </script>
+    }
